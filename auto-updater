@@ -1,15 +1,20 @@
 #!/bin/bash
 
+telegram-send "Raspberry Pi started updating."
+
 update_output=$(sudo apt update -y)
 
 if [[ $update_output == *"upgradable"* ]]; then
 	upgrade_output=$(sudo apt upgrade -y)
 	if [[ $upgrade_output == *"0 upgraded, 0 newly installed"* ]]; then
 		telegram-send "Apt upgrade ran successfully."$'\n'$'\n'"Full log:"$'\n'$'\n'"$upgrade_output"
-	else;
+	elif [[ $upgrade_output == *"to remove them."* ]]; then
+		auto_remove_output="$(sudo apt autoremove -y)"
+		telegram-send "Autoremove ran."$'\n'$'\n'"Full log:"$'\n'$'\n'"$auto_remove_output"
+	else
 		telegram-send "Upgrade was not completed."
 	fi
-elif [[ $upgrade_output == *"to remove them."* ]]; then
-	auto_remove_output="$(sudo apt autoremove -y)"
-	telegram-send "Autoremove ran."$'\n'$'\n'"Full log:"$'\n'$'\n'"$auto_remove_output"
+
+elif [[ $update_output == *"up to date"* ]]; then
+	telegram-send "All packages are up to date"
 fi

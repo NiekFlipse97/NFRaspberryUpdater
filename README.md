@@ -13,3 +13,7 @@ Update raspberry pi and send a notification via telegram
 # Execution
 
 `auto-updater`
+
+To run this command every first day of the month. Follow these steps:
+1. sudo crontab -u root -e 
+2. `0 0 1 * * auto-updater >/dev/null 2>&1`
